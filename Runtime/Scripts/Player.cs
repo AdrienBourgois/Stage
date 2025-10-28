@@ -74,7 +74,12 @@ public class Player : MonoBehaviour
 
         if (controller.isGrounded)
         {
-            verticalVelocity = -0.5f;
+            // Si aucune entrée et sur terrain plat, éviter la glissade
+            if (inputX == 0 && inputZ == 0)
+                verticalVelocity = 0f;
+            else
+                verticalVelocity = -0.5f;
+
             if (Input.GetKeyDown(KeyCode.Space))
                 verticalVelocity = jumpForce;
         }
@@ -110,7 +115,6 @@ public class Player : MonoBehaviour
 
     private void OnValidate()
     {
-        // Rafraîchit la scène en mode Éditeur pour visualiser les changements (ex: distance caméra)
         if (!Application.isPlaying && cameraTransform != null)
         {
             Quaternion previewRot = Quaternion.Euler(cameraPitch, cameraYaw, 0);
