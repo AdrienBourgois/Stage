@@ -5,10 +5,10 @@ public class Player : MonoBehaviour
 {
     [Header("===== Mouvement Joueur =====")]
     [Tooltip("Vitesse de déplacement du joueur (mètres/seconde).")]
-    [Range(1f, 10f)] public float moveSpeed = 5f;
+    [Range(1f, 100f)] public float moveSpeed = 5f;
 
     [Tooltip("Force du saut (hauteur maximale du saut).")]
-    [Range(2f, 10f)] public float jumpForce = 5f;
+    [Range(2f, 100f)] public float jumpForce = 5f;
 
     [Tooltip("Force de gravité appliquée vers le bas.")]
     [Range(1f, 20f)] public float gravity = 9.81f;
@@ -30,13 +30,13 @@ public class Player : MonoBehaviour
     [Range(0.1f, 10f)] public float mouseSensitivityY = 2f;
 
     [Tooltip("Limite minimale de l’angle vertical (regard vers le bas).")]
-    [Range(-80f, 0f)] public float minVerticalAngle = -30f;
+    [Range(-80f, 0f)] public float minVerticalAngle = 0f;
 
     [Tooltip("Limite maximale de l’angle vertical (regard vers le haut).")]
-    [Range(0f, 85f)] public float maxVerticalAngle = 60f;
+    [Range(0f, 85f)] public float maxVerticalAngle = 85f;
 
     [Tooltip("Vitesse de lissage de la caméra (suivi fluide).")]
-    [Range(1f, 20f)] public float cameraSmoothness = 10f;
+    [Range(1f, 100f)] public float cameraSmoothness = 100f;
 
     bool debugDraw = true;
     Color debugArmColor = Color.cyan;
@@ -85,6 +85,11 @@ public class Player : MonoBehaviour
 
         velocity = moveDirection * moveSpeed + Vector3.up * verticalVelocity;
         controller.Move(velocity * Time.deltaTime);
+
+        if (moveDirection != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(velocity), 0.05f);
+        }
     }
 
     private void HandleCamera()
