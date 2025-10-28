@@ -22,15 +22,15 @@ namespace Stage
             Vector3 move = Vector3.zero;
 
             // Déplacements avant/arrière = axe Z
-            if (Input.GetKey(KeyCode.Z))
+            if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.UpArrow))
                 move.z += 1f;
-            if (Input.GetKey(KeyCode.S))
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
                 move.z -= 1f;
 
             // Déplacements gauche/droite = axe X
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
                 move.x += 1f;
-            if (Input.GetKey(KeyCode.Q))
+            if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
                 move.x -= 1f;
 
             // Normalisation et application de la vitesse
