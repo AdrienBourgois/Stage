@@ -1,54 +1,138 @@
-// Ceci est un commentaire
-using UnityEngine; // Utiliser le code de Unity
+using UnityEngine;
 
-namespace Stage
+[RequireComponent(typeof(CharacterController))]
+public class Player : MonoBehaviour
 {
-    [RequireComponent(typeof(CharacterController))]
-    public class Player : MonoBehaviour
+    [Header("===== Mouvement Joueur =====")]
+    [Tooltip("Vitesse de déplacement du joueur (mètres/seconde).")]
+    [Range(1f, 10f)] public float moveSpeed = 5f;
+
+    [Tooltip("Force du saut (hauteur maximale du saut).")]
+    [Range(2f, 10f)] public float jumpForce = 5f;
+
+    [Tooltip("Force de gravité appliquée vers le bas.")]
+    [Range(1f, 20f)] public float gravity = 9.81f;
+
+    [Header("===== Caméra Orbitale =====")]
+    [Tooltip("Transform de la caméra principale (doit être assigné manuellement).")]
+    public Transform cameraTransform;
+
+    [Tooltip("Distance entre la caméra et le joueur.")]
+    [Range(1f, 100f)] public float cameraDistance = 4f;
+
+    [Tooltip("Hauteur de la caméra au-dessus du joueur.")]
+    [Range(0.5f, 30f)] public float cameraHeight = 1.6f;
+
+    [Tooltip("Sensibilité de la souris sur l'axe horizontal (X).")]
+    [Range(0.1f, 10f)] public float mouseSensitivityX = 3f;
+
+    [Tooltip("Sensibilité de la souris sur l'axe vertical (Y).")]
+    [Range(0.1f, 10f)] public float mouseSensitivityY = 2f;
+
+    [Tooltip("Limite minimale de l’angle vertical (regard vers le bas).")]
+    [Range(-80f, 0f)] public float minVerticalAngle = -30f;
+
+    [Tooltip("Limite maximale de l’angle vertical (regard vers le haut).")]
+    [Range(0f, 85f)] public float maxVerticalAngle = 60f;
+
+    [Tooltip("Vitesse de lissage de la caméra (suivi fluide).")]
+    [Range(1f, 20f)] public float cameraSmoothness = 10f;
+
+    bool debugDraw = true;
+    Color debugArmColor = Color.cyan;
+    Color debugConeColor = new Color(1f, 0.6f, 0f, 0.4f);
+
+    private CharacterController controller;
+    private Vector3 velocity;
+    private float verticalVelocity;
+    private float cameraYaw;
+    private float cameraPitch;
+
+    private void Start()
     {
-        CharacterController controller;
-        public float Speed = 5f;
-        public float JumpHeight = 1.5f;
+        controller = GetComponent<CharacterController>();
+        if (cameraTransform == null && Camera.main != null)
+            cameraTransform = Camera.main.transform;
 
-        Vector3 velocity;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
-        void Start()
+    private void Update()
+    {
+        HandleMovement();
+        HandleCamera();
+    }
+
+    private void HandleMovement()
+    {
+        float inputX = Input.GetAxis("Horizontal");
+        float inputZ = Input.GetAxis("Vertical");
+
+        Vector3 moveDirection = Quaternion.Euler(0, cameraYaw, 0) * new Vector3(inputX, 0, inputZ);
+        moveDirection.Normalize();
+
+        if (controller.isGrounded)
         {
-            controller = GetComponent<CharacterController>();
+            verticalVelocity = -0.5f;
+            if (Input.GetKeyDown(KeyCode.Space))
+                verticalVelocity = jumpForce;
+        }
+        else
+        {
+            verticalVelocity -= gravity * Time.deltaTime;
         }
 
-        void Update()
+        velocity = moveDirection * moveSpeed + Vector3.up * verticalVelocity;
+        controller.Move(velocity * Time.deltaTime);
+    }
+
+    private void HandleCamera()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivityX;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivityY;
+
+        cameraYaw += mouseX;
+        cameraPitch -= mouseY;
+        cameraPitch = Mathf.Clamp(cameraPitch, minVerticalAngle, maxVerticalAngle);
+
+        Quaternion rotation = Quaternion.Euler(cameraPitch, cameraYaw, 0);
+        Vector3 desiredPos = transform.position - rotation * Vector3.forward * cameraDistance + Vector3.up * cameraHeight;
+
+        cameraTransform.position = Vector3.Lerp(cameraTransform.position, desiredPos, Time.deltaTime * cameraSmoothness);
+        cameraTransform.rotation = rotation;
+    }
+
+    private void OnValidate()
+    {
+        // Rafraîchit la scène en mode Éditeur pour visualiser les changements (ex: distance caméra)
+        if (!Application.isPlaying && cameraTransform != null)
         {
-            Vector3 move = Vector3.zero;
-
-            // Déplacements avant/arrière = axe Z
-            if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.UpArrow))
-                move.z += 1f;
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-                move.z -= 1f;
-
-            // Déplacements gauche/droite = axe X
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-                move.x += 1f;
-            if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
-                move.x -= 1f;
-
-            // Normalisation et application de la vitesse
-            move = move.normalized * Speed;
-
-            // Gravité + saut
-            if (controller.isGrounded)
-            {
-                if (velocity.y < 0)
-                    velocity.y = -2f; // garde le joueur au sol
-
-                if (Input.GetKeyDown(KeyCode.Space))
-                    velocity.y = Mathf.Sqrt(JumpHeight * -2f * Physics.gravity.y);
-            }
-
-            velocity.y += Physics.gravity.y * Time.deltaTime;
-
-            controller.Move((move + velocity) * Time.deltaTime);
+            Quaternion previewRot = Quaternion.Euler(cameraPitch, cameraYaw, 0);
+            Vector3 previewPos = transform.position - previewRot * Vector3.forward * cameraDistance + Vector3.up * cameraHeight;
+            cameraTransform.position = previewPos;
+            cameraTransform.rotation = previewRot;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!debugDraw || cameraTransform == null)
+            return;
+
+        Vector3 playerHead = transform.position + Vector3.up * cameraHeight;
+        Gizmos.color = debugArmColor;
+        Gizmos.DrawLine(playerHead, cameraTransform.position);
+        Gizmos.DrawWireSphere(cameraTransform.position, 0.2f);
+
+        Gizmos.color = debugConeColor;
+        Quaternion minRot = Quaternion.Euler(minVerticalAngle, cameraYaw, 0);
+        Quaternion maxRot = Quaternion.Euler(maxVerticalAngle, cameraYaw, 0);
+        Vector3 minDir = minRot * Vector3.forward * cameraDistance;
+        Vector3 maxDir = maxRot * Vector3.forward * cameraDistance;
+
+        Gizmos.DrawRay(playerHead, -minDir);
+        Gizmos.DrawRay(playerHead, -maxDir);
+        Gizmos.DrawWireSphere(playerHead, 0.1f);
     }
 }
