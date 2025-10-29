@@ -32,16 +32,6 @@ public class OscillatingMover : MonoBehaviour
         startPosition = transform.position;
     }
 
-    private void OnValidate()
-    {
-        if (period <= 0f)
-        {
-            period = 0.1f;
-        }
-
-        startPosition = transform.position;
-    }
-
     private void Update()
     {
         if (period <= 0f)

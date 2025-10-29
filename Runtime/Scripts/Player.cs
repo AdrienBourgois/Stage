@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     [Tooltip("Vitesse de rotation du personnage.")]
     [Range(1f, 30f)] public float turnSpeed = 12f;
 
+    [Tooltip("Angle de rotation a ajouter au player dans le cas ou le mesh ne serait pas dans le bon sens.")]
+    [Range(-180f, 180f)] public float rotationOffset = 0f;
+
     [Header("Jump")]
     [Tooltip("Hauteur du saut en metres.")]
     [Range(0.5f, 5f)] public float jumpHeight = 1.6f;
@@ -81,10 +84,10 @@ public class Player : MonoBehaviour
             cameraTransform = Camera.main.transform;
         }
 
-        var gm = GameManager.Instance;
-        if (gm != null)
+        var gameManager = GameManager.Instance;
+        if (gameManager != null)
         {
-            gm.RegisterPlayer(this);
+            gameManager.RegisterPlayer(this);
         }
     }
 
@@ -197,6 +200,7 @@ public class Player : MonoBehaviour
         if (currentHorizontal.sqrMagnitude > 0.01f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(currentHorizontal.normalized, Vector3.up);
+            targetRotation *= Quaternion.AngleAxis(rotationOffset, Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
         }
     }
