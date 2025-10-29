@@ -5,78 +5,69 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Movement")]
-    [Tooltip("Maximum speed while grounded.")]
+    [Tooltip("Vitesse maximale au sol.")]
     [Range(1f, 15f)] public float moveSpeed = 7f;
 
-    [Tooltip("How fast the character accelerates when on the ground.")]
+    [Tooltip("Vitesse d'acceleration au sol.")]
     [Range(1f, 30f)] public float groundAcceleration = 20f;
 
-    [Tooltip("How fast the character can accelerate while in the air.")]
+    [Tooltip("Vitesse d'acceleration en l'air.")]
     [Range(1f, 30f)] public float airAcceleration = 10f;
 
-    [Tooltip("Rotation speed when turning to face the movement direction.")]
+    [Tooltip("Vitesse de rotation du personnage.")]
     [Range(1f, 30f)] public float turnSpeed = 12f;
 
     [Header("Jump")]
-    [Tooltip("Desired jump height in metres.")]
+    [Tooltip("Hauteur du saut en metres.")]
     [Range(0.5f, 5f)] public float jumpHeight = 1.6f;
 
-    [Tooltip("Extra time the player can still jump after walking off a platform.")]
+    [Tooltip("Temps supplementaire pour sauter apres avoir quitte une plateforme.")]
     [Range(0f, 0.5f)] public float coyoteTime = 0.1f;
 
-    [Tooltip("Buffer window so a jump pressed slightly before landing still works.")]
+    [Tooltip("Fenetre de temps pour sauter juste avant d'atterrir.")]
     [Range(0f, 0.5f)] public float jumpBufferTime = 0.1f;
 
     [Header("Gravity")]
-    [Tooltip("Gravity force applied every frame.")]
+    [Tooltip("Force de gravite appliquee a chaque frame.")]
     [Range(-40f, -5f)] public float gravity = -20f;
 
-    [Tooltip("Maximum fall speed.")]
+    [Tooltip("Vitesse de chute maximale.")]
     [Range(5f, 60f)] public float terminalVelocity = 50f;
 
     [Header("Ground Check")]
-    [Tooltip("Offset from the player's pivot to perform the ground check.")]
+    [Tooltip("Decalage depuis le pivot du joueur pour verifier le sol.")]
     public Vector3 groundCheckOffset = new Vector3(0f, -0.5f, 0f);
 
-    [Tooltip("Radius of the ground check sphere.")]
+    [Tooltip("Rayon de la sphere de verification du sol.")]
     [Range(0.05f, 0.75f)] public float groundCheckRadius = 0.3f;
 
-    [Tooltip("Layers that count as ground.")]
+    [Tooltip("Calques qui comptent comme sol.")]
     public LayerMask groundMask = ~0;
 
     [Header("Camera")]
-    [Tooltip("Reference to the camera transform that should orbit around the player.")]
+    [Tooltip("Reference a la camera qui tourne autour du joueur.")]
     public Transform cameraTransform;
 
-    [Tooltip("Distance between the camera and the player.")]
+    [Tooltip("Distance entre la camera et le joueur.")]
     [Range(2f, 12f)] public float cameraDistance = 5f;
 
-    [Tooltip("Height the camera tries to keep above the player's pivot.")]
+    [Tooltip("Hauteur de la camera au-dessus du pivot du joueur.")]
     [Range(0.2f, 3f)] public float cameraHeight = 1.6f;
 
-    [Tooltip("Mouse sensitivity on the X axis.")]
+    [Tooltip("Sensibilite de la souris sur l'axe X.")]
     [Range(0.5f, 10f)] public float mouseSensitivityX = 3f;
 
-    [Tooltip("Mouse sensitivity on the Y axis.")]
+    [Tooltip("Sensibilite de la souris sur l'axe Y.")]
     [Range(0.5f, 10f)] public float mouseSensitivityY = 2.5f;
 
-    [Tooltip("Minimum vertical angle allowed for the camera.")]
+    [Tooltip("Angle vertical minimum autorise pour la camera.")]
     [Range(-80f, -5f)] public float minVerticalAngle = -50f;
 
-    [Tooltip("Maximum vertical angle allowed for the camera.")]
+    [Tooltip("Angle vertical maximum autorise pour la camera.")]
     [Range(5f, 85f)] public float maxVerticalAngle = 70f;
 
-    [Tooltip("How fast the camera reaches its target position.")]
+    [Tooltip("Vitesse de deplacement de la camera vers sa position cible.")]
     [Range(1f, 30f)] public float cameraSmoothTime = 10f;
-
-    [Tooltip("Should debug gizmos be drawn in the editor?")]
-    public bool drawDebug = true;
-
-    [Tooltip("Color of the ground check gizmo.")]
-    public Color groundGizmoColor = new Color(0.8f, 0.4f, 0f, 0.35f);
-
-    [Tooltip("Color of the camera arm gizmo.")]
-    public Color cameraGizmoColor = Color.cyan;
 
     public CharacterController Controller => controller;
 
@@ -252,15 +243,12 @@ public class Player : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (!drawDebug)
-            return;
-
-        Gizmos.color = groundGizmoColor;
+        Gizmos.color = new Color(0.8f, 0.4f, 0f, 0.35f);
         Gizmos.DrawSphere(transform.position + groundCheckOffset, groundCheckRadius);
 
         if (cameraTransform != null)
         {
-            Gizmos.color = cameraGizmoColor;
+            Gizmos.color = Color.cyan;
             Vector3 pivot = transform.position + Vector3.up * cameraHeight;
             Gizmos.DrawLine(pivot, cameraTransform.position);
             Gizmos.DrawWireSphere(cameraTransform.position, 0.2f);

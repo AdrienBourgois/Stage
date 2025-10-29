@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class RespawnTrigger : MonoBehaviour
 {
-    [Tooltip("If true, the trigger will only affect the player. Otherwise every CharacterController is respawned.")]
+    [Tooltip("Si vrai le trigger n'affecte que le joueur. Sinon tous les CharacterController sont respawn.")]
     public bool playerOnly = true;
 
     private void Reset()
