@@ -1,7 +1,7 @@
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
     [Header("Movement")]
@@ -33,16 +33,6 @@ public class Player : MonoBehaviour
 
     [Tooltip("Vitesse de chute maximale.")]
     [Range(5f, 60f)] public float terminalVelocity = 50f;
-
-    [Header("Ground Check")]
-    [Tooltip("Decalage depuis le pivot du joueur pour verifier le sol.")]
-    public Vector3 groundCheckOffset = new Vector3(0f, -0.5f, 0f);
-
-    [Tooltip("Rayon de la sphere de verification du sol.")]
-    [Range(0.05f, 0.75f)] public float groundCheckRadius = 0.3f;
-
-    [Tooltip("Calques qui comptent comme sol.")]
-    public LayerMask groundMask = ~0;
 
     [Header("Camera")]
     [Tooltip("Reference a la camera qui tourne autour du joueur.")]
@@ -80,7 +70,7 @@ public class Player : MonoBehaviour
     private float jumpBufferCounter;
     private Vector3 cameraVelocity;
 
-    private bool IsGrounded => controller.isGrounded || Physics.CheckSphere(transform.position + groundCheckOffset, groundCheckRadius, groundMask, QueryTriggerInteraction.Ignore);
+    private bool IsGrounded => controller.isGrounded;
 
     private void Awake()
     {
@@ -228,24 +218,15 @@ public class Player : MonoBehaviour
 
     public void RespawnAt(Vector3 position)
     {
-        StartCoroutine(RespawnRoutine(position));
-    }
-
-    private IEnumerator RespawnRoutine(Vector3 position)
-    {
         controller.enabled = false;
         transform.position = position;
         currentVelocity = Vector3.zero;
         verticalVelocity = 0f;
-        yield return null;
         controller.enabled = true;
     }
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = new Color(0.8f, 0.4f, 0f, 0.35f);
-        Gizmos.DrawSphere(transform.position + groundCheckOffset, groundCheckRadius);
-
         if (cameraTransform != null)
         {
             Gizmos.color = Color.cyan;

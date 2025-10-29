@@ -7,5 +7,9 @@
   "unityRelease": "0b5",
   "author": {
     "name": "Millie"
+  },
+  "dependencies": {
+    "com.unity.learn.iet-framework": "5.0.2",
+    "com.unity.learn.iet-framework.authoring": "1.5.2"
   }
 }
