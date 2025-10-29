@@ -21,18 +21,6 @@ public struct PlayerPresetData
     public float gravity;
     public float terminalVelocity;
     
-    // Ground Check
-    public float groundCheckRadius;
-    
-    // Camera
-    public float cameraDistance;
-    public float cameraHeight;
-    public float mouseSensitivityX;
-    public float mouseSensitivityY;
-    public float minVerticalAngle;
-    public float maxVerticalAngle;
-    public float cameraSmoothTime;
-    
     public void ApplyToPlayer(Player player)
     {
         if (player == null)
@@ -55,17 +43,5 @@ public struct PlayerPresetData
         // Gravity
         player.gravity = gravity;
         player.terminalVelocity = terminalVelocity;
-        
-        // Ground Check
-        player.groundCheckRadius = groundCheckRadius;
-        
-        // Camera
-        player.cameraDistance = cameraDistance;
-        player.cameraHeight = cameraHeight;
-        player.mouseSensitivityX = mouseSensitivityX;
-        player.mouseSensitivityY = mouseSensitivityY;
-        player.minVerticalAngle = minVerticalAngle;
-        player.maxVerticalAngle = maxVerticalAngle;
-        player.cameraSmoothTime = cameraSmoothTime;
     }
 }

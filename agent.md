@@ -30,10 +30,10 @@ Contient tous les scripts de jeu principaux :
 ### Editor/
 Contient les outils d'édition Unity :
 
-- **StageValidationWindow.cs** : Fenêtre d'éditeur avec checklist de validation pour aider les étudiants à vérifier leur configuration
+- **StageValidationWindow.cs** : Fenêtre d'éditeur avec checklist de validation pour aider les étudiants à vérifier leur configuration (accessible via Stage GTech > Validation)
 - **PlayerEditor.cs** : Éditeur personnalisé pour le Player avec boutons pour appliquer des presets
 
-### Presets/
+### Runtime/Presets/
 Configurations prédéfinies pour le joueur :
 
 - **PlayerPresetData.cs** : Structure de données pour stocker les paramètres
@@ -41,7 +41,7 @@ Configurations prédéfinies pour le joueur :
 - **PlayerPresetMoon.cs** : Gravité lunaire (sauts hauts, chute lente)
 - **PlayerPresetMario.cs** : Mouvement rapide et précis type Mario
 
-### Tutorials/
+### Runtime/Tutorials/
 Tutoriels scriptables en français :
 
 - **TutorialTextMeshPro.cs** : Comment créer un texte 3D avec TextMeshPro
@@ -68,7 +68,8 @@ Tutoriels scriptables en français :
 
 ## Dépendances
 
-- Unity Tutorial Framework (com.unity.learn.iet-framework v3.1.3) : Pour créer des tutoriels interactifs guidés
+- Unity Tutorial Framework (com.unity.learn.iet-framework v5.0.2) : Pour créer des tutoriels interactifs guidés
+- Unity Tutorial Authoring Tools (com.unity.learn.iet-framework.authoring v1.5.2) : Outils d'édition pour les tutoriels
 
 ## Utilisation pour les Étudiants
 
@@ -76,7 +77,7 @@ Tutoriels scriptables en français :
    - Ajouter un GameManager à la scène
    - Ajouter un Player avec le tag "Player"
    - Configurer au moins un Checkpoint de départ
-   - Vérifier la configuration avec Window > Stage GTech > Validation
+   - Vérifier la configuration avec Stage GTech > Validation
 
 2. **Level Design** :
    - Créer le terrain et les plateformes
@@ -94,7 +95,13 @@ Tutoriels scriptables en français :
 ### Corrections Récentes
 - Suppression du coroutine inutile dans Player.RespawnAt() pour un respawn instantané
 - Remplacement de FindObjectOfType (obsolète) par FindFirstObjectByType
-- Amélioration de la détection du sol avec Physics.CheckSphere en complément de isGrounded
+- Simplification de la détection du sol : utilisation uniquement de CharacterController.isGrounded
+- Ajout de RequireComponent(Rigidbody) pour les triggers
+- Suppression des paramètres de ground check (offset, radius, mask)
+- Retrait des paramètres de caméra des presets (dépendants du jeu)
+- Réorganisation : Presets et Tutorials déplacés dans Runtime/
+- Mise à jour vers Tutorial Framework 5.0.2 et Authoring Tools 1.5.2
+- Fenêtre de validation déplacée au menu racine "Stage GTech"
 
 ### Évolutions Possibles
 - Ajouter plus de presets (vitesse élevée, plateforme précise, etc.)

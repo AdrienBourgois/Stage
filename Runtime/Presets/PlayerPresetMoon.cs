@@ -24,19 +24,7 @@ public class PlayerPresetMoon : ScriptableObject
         
         // Gravity - Much lower for moon-like feeling
         gravity = -8f,
-        terminalVelocity = 20f,
-        
-        // Ground Check
-        groundCheckRadius = 0.3f,
-        
-        // Camera
-        cameraDistance = 6f,
-        cameraHeight = 2f,
-        mouseSensitivityX = 3f,
-        mouseSensitivityY = 2.5f,
-        minVerticalAngle = -50f,
-        maxVerticalAngle = 70f,
-        cameraSmoothTime = 10f
+        terminalVelocity = 20f
     };
     
     public void ApplyToPlayer(Player player)

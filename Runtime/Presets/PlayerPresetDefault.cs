@@ -23,19 +23,7 @@ public class PlayerPresetDefault : ScriptableObject
         
         // Gravity - Balanced
         gravity = -20f,
-        terminalVelocity = 50f,
-        
-        // Ground Check
-        groundCheckRadius = 0.3f,
-        
-        // Camera
-        cameraDistance = 5f,
-        cameraHeight = 1.6f,
-        mouseSensitivityX = 3f,
-        mouseSensitivityY = 2.5f,
-        minVerticalAngle = -50f,
-        maxVerticalAngle = 70f,
-        cameraSmoothTime = 10f
+        terminalVelocity = 50f
     };
     
     public void ApplyToPlayer(Player player)

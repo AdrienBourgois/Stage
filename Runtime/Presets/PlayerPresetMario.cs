@@ -24,19 +24,7 @@ public class PlayerPresetMario : ScriptableObject
         
         // Gravity - Snappy jumps
         gravity = -25f,
-        terminalVelocity = 45f,
-        
-        // Ground Check
-        groundCheckRadius = 0.3f,
-        
-        // Camera
-        cameraDistance = 5f,
-        cameraHeight = 1.8f,
-        mouseSensitivityX = 3.5f,
-        mouseSensitivityY = 3f,
-        minVerticalAngle = -50f,
-        maxVerticalAngle = 70f,
-        cameraSmoothTime = 12f
+        terminalVelocity = 45f
     };
     
     public void ApplyToPlayer(Player player)

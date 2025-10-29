@@ -71,7 +71,7 @@ Ce package fournit tous les outils nécessaires pour créer un petit jeu de plat
    - Cocher `Is Starting Checkpoint` pour le premier checkpoint
 
 4. **Vérifier la Configuration**
-   - Ouvrir **Window > Stage GTech > Validation**
+   - Ouvrir **Stage GTech > Validation**
    - Vérifier que tous les éléments sont correctement configurés
 
 ### 2. Ajouter des Éléments de Gameplay
@@ -181,16 +181,16 @@ La fenêtre de validation vérifie :
 ### Debug Visuel
 Tous les composants affichent des Gizmos :
 - **Checkpoint** : Cube jaune/vert
-- **Player** : Sphère orange pour ground check, ligne pour caméra
+- **Player** : Ligne cyan pour la caméra
 - **OscillatingMover** : Ligne magenta montrant le trajet
 - **GameManager** : Sphère cyan au checkpoint actuel
 
 ## 🐛 Dépannage
 
 ### Le joueur ne saute pas
-- Vérifier que le Ground Mask inclut les calques du sol
-- Ajuster le Ground Check Radius
-- Vérifier que le Character Controller n'est pas trop haut
+- Vérifier que le Character Controller est configuré correctement
+- Ajuster la hauteur et le rayon du Character Controller
+- Vérifier que le sol a un collider
 
 ### Le respawn ne fonctionne pas
 - Vérifier que le GameManager existe

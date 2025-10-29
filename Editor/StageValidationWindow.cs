@@ -10,7 +10,7 @@ public class StageValidationWindow : EditorWindow
 {
     private Vector2 scrollPosition;
     
-    [MenuItem("Window/Stage GTech/Validation")]
+    [MenuItem("Stage GTech/Validation")]
     public static void ShowWindow()
     {
         var window = GetWindow<StageValidationWindow>("Validation Scene");
