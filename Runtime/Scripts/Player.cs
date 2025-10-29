@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -228,16 +227,10 @@ public class Player : MonoBehaviour
 
     public void RespawnAt(Vector3 position)
     {
-        StartCoroutine(RespawnRoutine(position));
-    }
-
-    private IEnumerator RespawnRoutine(Vector3 position)
-    {
         controller.enabled = false;
         transform.position = position;
         currentVelocity = Vector3.zero;
         verticalVelocity = 0f;
-        yield return null;
         controller.enabled = true;
     }
 
