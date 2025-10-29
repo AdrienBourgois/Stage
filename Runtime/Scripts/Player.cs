@@ -6,13 +6,13 @@ public class Player : MonoBehaviour
 {
     [Header("Movement")]
     [Tooltip("Vitesse maximale au sol.")]
-    [Range(1f, 15f)] public float moveSpeed = 7f;
+    [Range(1f, 40f)] public float moveSpeed = 7f;
 
     [Tooltip("Vitesse d'acceleration au sol.")]
-    [Range(1f, 30f)] public float groundAcceleration = 20f;
+    [Range(1f, 40f)] public float groundAcceleration = 20f;
 
     [Tooltip("Vitesse d'acceleration en l'air.")]
-    [Range(1f, 30f)] public float airAcceleration = 10f;
+    [Range(1f, 40f)] public float airAcceleration = 10f;
 
     [Tooltip("Vitesse de rotation du personnage.")]
     [Range(1f, 30f)] public float turnSpeed = 12f;
@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
 
     [Header("Jump")]
     [Tooltip("Hauteur du saut en metres.")]
-    [Range(0.5f, 5f)] public float jumpHeight = 1.6f;
+    [Range(0.5f, 50f)] public float jumpHeight = 1.6f;
 
     [Tooltip("Temps supplementaire pour sauter apres avoir quitte une plateforme.")]
     [Range(0f, 0.5f)] public float coyoteTime = 0.1f;
@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     public Transform cameraTransform;
 
     [Tooltip("Distance entre la camera et le joueur.")]
-    [Range(2f, 12f)] public float cameraDistance = 5f;
+    [Range(2f, 30f)] public float cameraDistance = 5f;
 
     [Tooltip("Hauteur de la camera au-dessus du pivot du joueur.")]
     [Range(0.2f, 3f)] public float cameraHeight = 1.6f;
@@ -59,8 +59,7 @@ public class Player : MonoBehaviour
     [Tooltip("Angle vertical maximum autorise pour la camera.")]
     [Range(5f, 85f)] public float maxVerticalAngle = 70f;
 
-    [Tooltip("Vitesse de deplacement de la camera vers sa position cible.")]
-    [Range(1f, 30f)] public float cameraSmoothTime = 10f;
+    public const float cameraSmoothTime = 40f;
 
     public CharacterController Controller => controller;
 
