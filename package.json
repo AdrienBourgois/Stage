@@ -7,5 +7,8 @@
   "unityRelease": "0b5",
   "author": {
     "name": "Millie"
+  },
+  "dependencies": {
+    "com.unity.learn.iet-framework": "3.1.3"
   }
 }
