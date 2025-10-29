@@ -24,19 +24,14 @@ public class GameManager : MonoBehaviour
     }
 
     [Header("Respawn")]
-    [Tooltip("Spawn used when no checkpoint has been reached yet.")]
+    [Tooltip("Point d'apparition utilise quand aucun checkpoint n'a ete atteint.")]
     [SerializeField] private Transform defaultSpawnPoint;
 
-    [Tooltip("Automatically look for the player on start if not assigned manually.")]
+    [Tooltip("Recherche automatiquement le joueur au demarrage s'il n'est pas assigne manuellement.")]
     [SerializeField] private Player player;
 
-    [Tooltip("Keep this manager alive when loading new scenes.")]
+    [Tooltip("Garde ce manager actif lors du chargement de nouvelles scenes.")]
     [SerializeField] private bool persistAcrossScenes;
-
-    [Header("Debug")]
-    [Tooltip("Draw gizmos to visualise the active checkpoint.")]
-    [SerializeField] private bool drawDebug = true;
-    [SerializeField] private Color checkpointColor = new Color(0.2f, 0.8f, 1f, 0.25f);
 
     private Transform currentCheckpoint;
 
@@ -128,15 +123,12 @@ public class GameManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!drawDebug)
-            return;
-
         Transform checkpoint = currentCheckpoint != null ? currentCheckpoint : defaultSpawnPoint;
 
         if (checkpoint == null)
             return;
 
-        Gizmos.color = checkpointColor;
+        Gizmos.color = new Color(0.2f, 0.8f, 1f, 0.25f);
         Gizmos.DrawSphere(checkpoint.position, 0.35f);
     }
 }

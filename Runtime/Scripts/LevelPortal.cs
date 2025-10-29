@@ -6,16 +6,16 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class LevelPortal : MonoBehaviour
 {
-    [Tooltip("Name of the scene to load when the player enters the portal.")]
+    [Tooltip("Nom de la scene a charger quand le joueur entre dans le portail.")]
     public string sceneToLoad;
 
-    [Tooltip("Optional delay before loading the scene. Useful to play a sound or animation.")]
+    [Tooltip("Delai optionnel avant de charger la scene. Utile pour jouer un son ou une animation.")]
     [Range(0f, 5f)] public float loadDelay = 0f;
 
-    [Tooltip("Play an audio clip when the portal is triggered.")]
+    [Tooltip("Joue un clip audio quand le portail est declenche.")]
     public AudioSource audioSource;
 
-    [Tooltip("Optional VFX played when the portal is triggered.")]
+    [Tooltip("VFX optionnel joue quand le portail est declenche.")]
     public ParticleSystem vfx;
 
     private bool hasTriggered;

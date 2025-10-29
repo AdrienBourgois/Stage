@@ -7,19 +7,14 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Checkpoint : MonoBehaviour
 {
-    [Tooltip("If enabled this checkpoint will automatically become the starting point when the scene loads.")]
+    [Tooltip("Si active ce checkpoint devient automatiquement le point de depart au chargement de la scene.")]
     public bool isStartingCheckpoint;
 
-    [Tooltip("Optional visual effect triggered when the checkpoint is activated.")]
+    [Tooltip("Effet visuel optionnel joue quand le checkpoint est active.")]
     public ParticleSystem activateEffect;
 
-    [Tooltip("Optional audio source used to play a sound when the checkpoint is activated.")]
+    [Tooltip("Source audio optionnelle jouee quand le checkpoint est active.")]
     public AudioSource activateAudio;
-
-    [Header("Debug")]
-    public bool drawGizmos = true;
-    public Color inactiveColor = Color.yellow;
-    public Color activeColor = new Color(0.2f, 0.9f, 0.3f, 1f);
 
     private bool isActive;
 
@@ -67,12 +62,9 @@ public class Checkpoint : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!drawGizmos)
-            return;
-
         bool active = Application.isPlaying ? isActive : isStartingCheckpoint;
 
-        Color color = active ? activeColor : inactiveColor;
+        Color color = active ? new Color(0.2f, 0.9f, 0.3f, 1f) : Color.yellow;
         color.a = 0.35f;
         Gizmos.color = color;
         Gizmos.DrawCube(transform.position, Vector3.one);

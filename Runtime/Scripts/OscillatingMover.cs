@@ -13,23 +13,17 @@ public class OscillatingMover : MonoBehaviour
         Z
     }
 
-    [Tooltip("Axis along which the object should move.")]
+    [Tooltip("Axe sur lequel l'objet doit se deplacer.")]
     public Axis axis = Axis.X;
 
-    [Tooltip("Distance of the movement in metres (peak to peak).")]
+    [Tooltip("Distance du mouvement en metres (de bout en bout).")]
     [Range(0.1f, 10f)] public float distance = 2f;
 
-    [Tooltip("How long it takes to complete a full back and forth cycle (seconds).")]
+    [Tooltip("Temps pour completer un cycle aller-retour (secondes).")]
     [Range(0.1f, 10f)] public float period = 2f;
 
-    [Tooltip("Optional offset to desynchronise multiple movers.")]
+    [Tooltip("Decalage temporel optionnel pour desynchroniser plusieurs mouvements.")]
     public float timeOffset;
-
-    [Tooltip("Draw a line in the Scene view to visualise the movement range.")]
-    public bool drawGizmos = true;
-
-    [Tooltip("Color of the debug line.")]
-    public Color gizmoColor = Color.magenta;
 
     private Vector3 startPosition;
 
@@ -76,9 +70,6 @@ public class OscillatingMover : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (!drawGizmos)
-            return;
-
         Vector3 direction = Vector3.right;
         switch (axis)
         {
@@ -95,7 +86,7 @@ public class OscillatingMover : MonoBehaviour
         Vector3 start = from - direction * halfDistance;
         Vector3 end = from + direction * halfDistance;
 
-        Gizmos.color = gizmoColor;
+        Gizmos.color = Color.magenta;
         Gizmos.DrawLine(start, end);
         Gizmos.DrawWireSphere(start, 0.1f);
         Gizmos.DrawWireSphere(end, 0.1f);

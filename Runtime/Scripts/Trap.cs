@@ -7,13 +7,13 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Trap : MonoBehaviour
 {
-    [Tooltip("Optional delay before the respawn happens (seconds).")]
+    [Tooltip("Delai optionnel avant le respawn (secondes).")]
     [Range(0f, 3f)] public float respawnDelay;
 
-    [Tooltip("Audio played when the trap is triggered.")]
+    [Tooltip("Audio joue quand le piege est declenche.")]
     public AudioSource audioSource;
 
-    [Tooltip("Optional particle effect played on trigger.")]
+    [Tooltip("Effet de particules optionnel joue au declenchement.")]
     public ParticleSystem vfx;
 
     private void Reset()
