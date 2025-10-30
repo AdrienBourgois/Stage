@@ -83,24 +83,8 @@ Configurations prédéfinies pour le joueur :
 
 ## Notes Techniques
 
-### Corrections Récentes
-- Suppression du coroutine inutile dans Player.RespawnAt() pour un respawn instantané
-- Remplacement de FindObjectOfType (obsolète) par FindFirstObjectByType
-- Simplification de la détection du sol : utilisation uniquement de CharacterController.isGrounded
-- Ajout de RequireComponent(Rigidbody) pour les triggers
-- Suppression des paramètres de ground check (offset, radius, mask)
-- Retrait des paramètres de caméra des presets (dépendants du jeu)
-- Réorganisation : Presets et Tutorials déplacés dans Runtime/
-- Mise à jour vers Tutorial Framework 5.0.2 et Authoring Tools 1.5.2
-- Fenêtre de validation déplacée au menu racine "Stage GTech"
-
 ### Évolutions Possibles
 - Ajouter plus de presets (vitesse élevée, plateforme précise, etc.)
-- Créer des tutoriels interactifs avec le Tutorial Framework
 - Ajouter des effets visuels par défaut pour les checkpoints et portails
 - Système de collectibles
 - Power-ups temporaires
-
-## Maintenance
-
-Ce package est maintenu pour le bootcamp GTech. Les mises à jour doivent toujours privilégier la simplicité d'utilisation par des débutants non-programmeurs.

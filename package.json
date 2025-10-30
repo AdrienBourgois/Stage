@@ -1,6 +1,6 @@
 {
   "name": "com.millie.stage",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "displayName": "Stage GTech",
   "description": "Stage GTech",
   "unity": "6000.1",
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "com.unity.learn.iet-framework": "5.0.2",
-    "com.unity.learn.iet-framework.authoring": "1.5.2"
+    "com.unity.learn.iet-framework.authoring": "1.5.2",
+    "com.unity.shadergraph": "17.1.0"
   }
 }

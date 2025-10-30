@@ -41,4 +41,32 @@ public class Rotator : MonoBehaviour
         float angle = speed * Time.deltaTime;
         transform.Rotate(rotationAxis, angle, useLocalSpace ? Space.Self : Space.World);
     }
+
+    private void OnDrawGizmos()
+    {
+        DrawAxisGizmo(new Color(1f, 0.9f, 0f, 0.15f), 0.5f);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        DrawAxisGizmo(new Color(1f, 0.8f, 0f, 0.45f), 0.75f);
+    }
+
+    private void DrawAxisGizmo(Color color, float length)
+    {
+        Vector3 localAxis = axis switch
+        {
+            Axis.X => Vector3.right,
+            Axis.Y => Vector3.up,
+            _ => Vector3.forward
+        };
+
+        Vector3 worldAxis = useLocalSpace ? transform.TransformDirection(localAxis) : localAxis;
+        Vector3 origin = transform.position;
+
+        Gizmos.color = color;
+        Gizmos.DrawLine(origin - worldAxis * length, origin + worldAxis * length);
+        Gizmos.DrawSphere(origin + worldAxis * length, 0.05f);
+        Gizmos.DrawSphere(origin - worldAxis * length, 0.05f);
+    }
 }

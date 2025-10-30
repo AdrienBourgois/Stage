@@ -44,11 +44,11 @@ public class Player : MonoBehaviour
     [Tooltip("Nombre de vies disponibles pour le joueur au demarrage.")]
     [Range(0, 9)] public int startingLives = 3;
 
-    [Tooltip("Score actuel du joueur")]
-    public int score;
+    [Tooltip("Score actuel du joueur (lecture seule).")]
+    [SerializeField] private int score;
 
-    [Tooltip("Vies actuellement restantes")]
-    public int lives;
+    [Tooltip("Vies actuellement restantes (lecture seule).")]
+    [SerializeField] private int lives;
 
     [Header("Camera")]
     [Tooltip("Reference a la camera qui tourne autour du joueur.")]

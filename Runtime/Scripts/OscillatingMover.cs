@@ -58,27 +58,47 @@ public class OscillatingMover : MonoBehaviour
         transform.position = target;
     }
 
+    private void OnDrawGizmos()
+    {
+        DrawGizmos(new Color(0.7f, 0.2f, 1f, 0.15f), subtle: true);
+    }
+
     private void OnDrawGizmosSelected()
     {
-        Vector3 direction = Vector3.right;
-        switch (axis)
+        DrawGizmos(new Color(0.85f, 0.2f, 1f, 0.45f), subtle: false);
+    }
+
+    private void DrawGizmos(Color color, bool subtle)
+    {
+        Vector3 basePosition = Application.isPlaying ? startPosition : transform.position;
+        Vector3 direction = axis switch
         {
-            case Axis.Y:
-                direction = Vector3.up;
-                break;
-            case Axis.Z:
-                direction = Vector3.forward;
-                break;
+            Axis.Y => Vector3.up,
+            Axis.Z => Vector3.forward,
+            _ => Vector3.right
+        };
+
+        float halfDistance = distance * 0.5f;
+        Vector3 start = basePosition - direction * halfDistance;
+        Vector3 end = basePosition + direction * halfDistance;
+
+        Gizmos.color = color;
+        Gizmos.DrawLine(start, end);
+
+        float radius = subtle ? 0.08f : 0.12f;
+        Gizmos.DrawWireSphere(start, radius);
+        Gizmos.DrawWireSphere(end, radius);
+
+        Vector3 arrowTip = Vector3.Lerp(start, end, 0.5f);
+        Vector3 perp = Vector3.Cross(direction, Vector3.up);
+        if (perp.sqrMagnitude < 0.001f)
+        {
+            perp = Vector3.Cross(direction, Vector3.right);
         }
 
-        Vector3 from = Application.isPlaying ? startPosition : transform.position;
-        float halfDistance = distance * 0.5f;
-        Vector3 start = from - direction * halfDistance;
-        Vector3 end = from + direction * halfDistance;
-
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(start, end);
-        Gizmos.DrawWireSphere(start, 0.1f);
-        Gizmos.DrawWireSphere(end, 0.1f);
+        perp.Normalize();
+        float arrowSize = subtle ? 0.15f : 0.25f;
+        Gizmos.DrawLine(arrowTip, arrowTip + perp * arrowSize);
+        Gizmos.DrawLine(arrowTip, arrowTip - perp * arrowSize);
     }
 }
