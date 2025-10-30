@@ -104,6 +104,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        player.HandleDeath();
         player.RespawnAt(CurrentCheckpoint.position);
     }
 

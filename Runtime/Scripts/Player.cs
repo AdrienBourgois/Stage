@@ -14,6 +14,9 @@ public class Player : MonoBehaviour
     [Tooltip("Vitesse d'acceleration en l'air.")]
     [Range(1f, 40f)] public float airAcceleration = 10f;
 
+    [Tooltip("Vitesse de deceleration au sol lorsque l'on relache les entrees.")]
+    [Range(1f, 60f)] public float groundDeceleration = 30f;
+
     [Tooltip("Vitesse de rotation du personnage.")]
     [Range(1f, 30f)] public float turnSpeed = 12f;
 
@@ -36,6 +39,16 @@ public class Player : MonoBehaviour
 
     [Tooltip("Vitesse de chute maximale.")]
     [Range(5f, 60f)] public float terminalVelocity = 50f;
+
+    [Header("Stats")]
+    [Tooltip("Nombre de vies disponibles pour le joueur au demarrage.")]
+    [Range(0, 9)] public int startingLives = 3;
+
+    [Tooltip("Score actuel du joueur")]
+    public int score;
+
+    [Tooltip("Vies actuellement restantes")]
+    public int lives;
 
     [Header("Camera")]
     [Tooltip("Reference a la camera qui tourne autour du joueur.")]
@@ -62,6 +75,8 @@ public class Player : MonoBehaviour
     public const float cameraSmoothTime = 40f;
 
     public CharacterController Controller => controller;
+    public int Score => score;
+    public int Lives => lives;
 
     private CharacterController controller;
     private Vector3 currentVelocity;
@@ -77,6 +92,8 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        lives = Mathf.Max(0, startingLives);
+        score = 0;
 
         if (cameraTransform == null && Camera.main != null)
         {
@@ -180,9 +197,23 @@ public class Player : MonoBehaviour
 
         float acceleration = grounded ? groundAcceleration : airAcceleration;
 
-        Vector3 desiredVelocity = desiredDirection * moveSpeed;
         Vector3 currentHorizontal = new Vector3(currentVelocity.x, 0f, currentVelocity.z);
-        currentHorizontal = Vector3.MoveTowards(currentHorizontal, desiredVelocity, acceleration * Time.deltaTime);
+
+        if (grounded && desiredDirection.sqrMagnitude < 0.0001f)
+        {
+            currentHorizontal = Vector3.MoveTowards(currentHorizontal, Vector3.zero, groundDeceleration * Time.deltaTime);
+
+            if (currentHorizontal.sqrMagnitude < 0.0001f)
+            {
+                currentHorizontal = Vector3.zero;
+            }
+        }
+        else
+        {
+            Vector3 desiredVelocity = desiredDirection * moveSpeed;
+            currentHorizontal = Vector3.MoveTowards(currentHorizontal, desiredVelocity, acceleration * Time.deltaTime);
+        }
+
         currentVelocity = new Vector3(currentHorizontal.x, 0f, currentHorizontal.z);
 
         verticalVelocity += gravity * Time.deltaTime;
@@ -217,6 +248,22 @@ public class Player : MonoBehaviour
         Vector3 targetPosition = transform.position + Vector3.up * cameraHeight - cameraRotation * Vector3.forward * cameraDistance;
         cameraTransform.rotation = cameraRotation;
         cameraTransform.position = Vector3.SmoothDamp(cameraTransform.position, targetPosition, ref cameraVelocity, 1f / cameraSmoothTime);
+    }
+
+    public void AddScore(int amount)
+    {
+        if (amount <= 0)
+            return;
+
+        score += amount;
+    }
+
+    public void HandleDeath()
+    {
+        if (lives <= 0)
+            return;
+
+        lives--;
     }
 
     public void RespawnAt(Vector3 position)
