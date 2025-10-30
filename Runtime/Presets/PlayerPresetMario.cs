@@ -4,8 +4,7 @@ using UnityEngine;
 /// Configuration preset pour le joueur avec des parametres type "Mario"
 /// (mouvement rapide, precis, responsive)
 /// </summary>
-[CreateAssetMenu(fileName = "PlayerPresetMario", menuName = "Stage GTech/Presets/Player Preset Mario")]
-public class PlayerPresetMario : ScriptableObject
+public class PlayerPresetMario
 {
     [Header("Preset: Mouvement Mario")]
     [Tooltip("Parametres pour un mouvement rapide et precis type 'Mario'")]

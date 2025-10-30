@@ -4,8 +4,7 @@ using UnityEngine;
 /// Configuration preset pour le joueur avec des parametres type "Lune"
 /// (gravite faible, sauts hauts)
 /// </summary>
-[CreateAssetMenu(fileName = "PlayerPresetMoon", menuName = "Stage GTech/Presets/Player Preset Moon")]
-public class PlayerPresetMoon : ScriptableObject
+public class PlayerPresetMoon
 {
     [Header("Preset: Gravite Lune")]
     [Tooltip("Parametres pour un mouvement type 'Lune' avec gravite reduite")]

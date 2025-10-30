@@ -28,7 +28,7 @@ public class PlayerEditor : Editor
         {
             if (presetDefault == null)
             {
-                presetDefault = ScriptableObject.CreateInstance<PlayerPresetDefault>();
+                presetDefault = new PlayerPresetDefault();
             }
             
             Undo.RecordObject(player, "Apply Default Preset");
@@ -40,7 +40,7 @@ public class PlayerEditor : Editor
         {
             if (presetMoon == null)
             {
-                presetMoon = ScriptableObject.CreateInstance<PlayerPresetMoon>();
+                presetMoon = new PlayerPresetMoon();
             }
             
             Undo.RecordObject(player, "Apply Moon Preset");
@@ -52,7 +52,7 @@ public class PlayerEditor : Editor
         {
             if (presetMario == null)
             {
-                presetMario = ScriptableObject.CreateInstance<PlayerPresetMario>();
+                presetMario = new PlayerPresetMario();
             }
             
             Undo.RecordObject(player, "Apply Mario Preset");

@@ -3,8 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Configuration preset pour le joueur avec des parametres par defaut equilibres
 /// </summary>
-[CreateAssetMenu(fileName = "PlayerPresetDefault", menuName = "Stage GTech/Presets/Player Preset Default")]
-public class PlayerPresetDefault : ScriptableObject
+public class PlayerPresetDefault
 {
     [Header("Preset: Configuration Par Defaut")]
     [Tooltip("Parametres equilibres pour un bon gameplay general")]
