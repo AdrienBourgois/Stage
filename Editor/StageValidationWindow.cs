@@ -28,22 +28,24 @@ public class StageValidationWindow : EditorWindow
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
         
         // Check GameManager
-        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        GameManager[] gameManagers = FindObjectsByType<GameManager>(FindObjectsSortMode.None);
+        GameManager gameManager = gameManagers.Length > 0 ? gameManagers[0] : null;
         DrawValidationItem("GameManager existe dans la scene", gameManager != null);
+        DrawValidationItem("Un seul GameManager est present", gameManagers.Length == 1);
         
         if (gameManager != null)
         {
             SerializedObject so = new SerializedObject(gameManager);
-            SerializedProperty playerProp = so.FindProperty("player");
             SerializedProperty spawnProp = so.FindProperty("defaultSpawnPoint");
             
-            DrawValidationItem("GameManager: Le joueur est assigne", playerProp.objectReferenceValue != null);
-            DrawValidationItem("GameManager: Point d'apparition par defaut assigne", spawnProp.objectReferenceValue != null);
+            DrawValidationItem("GameManager: Point d'apparition par defaut assigne", spawnProp != null && spawnProp.objectReferenceValue != null);
         }
         
         // Check Player
-        Player player = FindFirstObjectByType<Player>();
+        Player[] players = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        Player player = players.Length > 0 ? players[0] : null;
         DrawValidationItem("Player existe dans la scene", player != null);
+        DrawValidationItem("Un seul Player est present", players.Length == 1);
         
         if (player != null)
         {
@@ -62,16 +64,13 @@ public class StageValidationWindow : EditorWindow
             {
                 DrawValidationItem("Player: CharacterController est active", false);
             }
-            
-            // Check camera reference
-            SerializedObject playerSO = new SerializedObject(player);
-            SerializedProperty cameraProp = playerSO.FindProperty("cameraTransform");
-            DrawValidationItem("Player: Camera est assignee", cameraProp.objectReferenceValue != null);
         }
         
         // Check Camera
         Camera mainCamera = Camera.main;
         DrawValidationItem("Camera principale existe dans la scene", mainCamera != null);
+        int mainCameraCount = GameObject.FindGameObjectsWithTag("MainCamera").Length;
+        DrawValidationItem("Une seule camera a le tag MainCamera", mainCameraCount == 1);
         
         // Check Checkpoints
         Checkpoint[] checkpoints = FindObjectsByType<Checkpoint>(FindObjectsSortMode.None);
@@ -122,23 +121,23 @@ public class StageValidationWindow : EditorWindow
     private void DrawValidationItem(string label, bool isValid)
     {
         EditorGUILayout.BeginHorizontal();
-        
-        if (isValid)
-        {
-            EditorGUILayout.LabelField("✓", GUILayout.Width(20));
-            EditorGUILayout.LabelField(label);
-        }
-        else
-        {
-            EditorGUILayout.LabelField("✗", GUILayout.Width(20));
-            GUIStyle errorStyle = new GUIStyle(EditorStyles.label);
-            errorStyle.normal.textColor = Color.red;
-            EditorGUILayout.LabelField(label, errorStyle);
-        }
-        
+
+        string prefix = isValid ? "[OK]" : "[!]";
+        GUIStyle style = isValid ? EditorStyles.label : GetErrorStyle();
+
+        EditorGUILayout.LabelField(prefix, GUILayout.Width(30));
+        EditorGUILayout.LabelField(label, style);
+
         EditorGUILayout.EndHorizontal();
     }
-    
+
+    private GUIStyle GetErrorStyle()
+    {
+        GUIStyle style = new GUIStyle(EditorStyles.label);
+        style.normal.textColor = Color.red;
+        return style;
+    }
+
     private void OnInspectorUpdate()
     {
         // Repaint automatically when something changes

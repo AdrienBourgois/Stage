@@ -20,8 +20,8 @@ Ce package Unity est concu pour un bootcamp de formation destine a des adolescen
 ### Runtime/Scripts/
 Contient tous les scripts de jeu principaux :
 
-- **Player.cs** : Controleur de personnage avec mouvement, saut, gravite, camera integree, deceleration au relachement des entrees, gestion du score et des vies.
-- **GameManager.cs** : Singleton qui gere le joueur, les checkpoints, la teleportation lors du respawn et la perte de vies.
+- **Player.cs** : Controleur de personnage avec mouvement, saut, gravite, camera integree, deceleration au relachement des entrees, gestion du score et des vies. Singleton accessible via `Player.Instance` qui gere automatiquement la camera en recuperant l'objet tagge `MainCamera`.
+- **GameManager.cs** : Singleton (`GameManager.Instance`) qui gere le joueur, les checkpoints, la teleportation lors du respawn et la perte de vies sans assignation manuelle.
 - **Checkpoint.cs** : Points de sauvegarde que le joueur peut atteindre pour definir un nouveau point de respawn.
 - **Trap.cs** : Pieges qui declenchent le respawn du joueur (avec delai optionnel) tout en affichant le volume d'effet via des gizmos.
 - **LevelPortal.cs** : Portails pour charger une nouvelle scene.
@@ -50,6 +50,7 @@ Configurations predefinies pour le joueur :
 - Le score commence a zero et est augmente via `Player.AddScore(int)` ; les collectibles s'en servent pour attribuer un nombre de points variable.
 - Les collectibles possedent un UnityEvent `onCollected` pour chainer des effets supplementaires (son, VFX, activation de plateformes, etc.) puis se detruisent automatiquement.
 - Combinez `Collectible` et `Rotator` pour creer des pieces animees et evidentes visuellement pour les etudiants.
+- Le joueur et le GameManager se retrouvent automatiquement via leurs singletons respectifs, supprimant les assignations manuelles.
 
 ## EventMover et Animation d'Objets
 
@@ -64,6 +65,7 @@ Configurations predefinies pour le joueur :
 - Le code reste en anglais pour la compatibilite.
 - Les gizmos de debug sont toujours affiches quand un objet est selectionne.
 - Pas de couleurs de debug configurables : couleurs constantes pour simplifier.
+- Le Player recupere automatiquement la camera taggee `MainCamera` et le GameManager se lie au joueur sans assignation dans l'inspecteur.
 
 ### Debug et visualisation
 - Tous les scripts affichent des gizmos pour visualiser leur portee et leur fonctionnement (checkpoints, pieges, collectibles, trajectoires).

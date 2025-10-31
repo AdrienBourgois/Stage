@@ -27,9 +27,6 @@ public class GameManager : MonoBehaviour
     [Tooltip("Point d'apparition utilise quand aucun checkpoint n'a ete atteint.")]
     [SerializeField] private Transform defaultSpawnPoint;
 
-    [Tooltip("Recherche automatiquement le joueur au demarrage s'il n'est pas assigne manuellement.")]
-    [SerializeField] private Player player;
-
     [Tooltip("Garde ce manager actif lors du chargement de nouvelles scenes.")]
     [SerializeField] private bool persistAcrossScenes;
 
@@ -55,14 +52,20 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (player == null)
+        Player existingPlayer = Player.Instance;
+
+        if (existingPlayer == null)
         {
-            player = FindFirstObjectByType<Player>();
+            existingPlayer = FindFirstObjectByType<Player>();
         }
 
-        if (player != null)
+        if (existingPlayer != null)
         {
-            RegisterPlayer(player);
+            RegisterPlayer(existingPlayer);
+        }
+        else
+        {
+            Debug.LogWarning("GameManager could not find a Player in the scene. Please add one.");
         }
     }
 
@@ -71,11 +74,12 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void RegisterPlayer(Player newPlayer)
     {
-        player = newPlayer;
+        if (newPlayer == null)
+            return;
 
         if (currentCheckpoint == null)
         {
-            currentCheckpoint = defaultSpawnPoint != null ? defaultSpawnPoint : player.transform;
+            currentCheckpoint = defaultSpawnPoint != null ? defaultSpawnPoint : newPlayer.transform;
         }
     }
 
@@ -92,7 +96,14 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnDeath()
     {
-        if (player == null)
+        Player activePlayer = Player.Instance;
+
+        if (activePlayer == null)
+        {
+            activePlayer = FindFirstObjectByType<Player>();
+        }
+
+        if (activePlayer == null)
         {
             Debug.LogWarning("GameManager.OnDeath called but no player is registered yet.");
             return;
@@ -104,8 +115,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        player.HandleDeath();
-        player.RespawnAt(CurrentCheckpoint.position);
+        activePlayer.HandleDeath();
+        activePlayer.RespawnAt(CurrentCheckpoint.position);
     }
 
     /// <summary>
@@ -120,6 +131,14 @@ public class GameManager : MonoBehaviour
         }
 
         SceneManager.LoadScene(sceneName);
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 
     private void OnDrawGizmos()

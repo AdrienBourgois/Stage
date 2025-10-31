@@ -54,8 +54,8 @@ public class Player : MonoBehaviour
     [Tooltip("Active ou desactive la gestion de la camera.")]
     public bool manageCamera = true;
 
-    [Tooltip("Reference a la camera qui tourne autour du joueur.")]
-    public Transform cameraTransform;
+    [Tooltip("Reference a la camera qui tourne autour du joueur. Assignee automatiquement via le tag MainCamera si laisse vide.")]
+    [SerializeField, HideInInspector] private Transform cameraTransform;
 
     [Tooltip("Distance entre la camera et le joueur.")]
     [Range(2f, 30f)] public float cameraDistance = 5f;
@@ -80,6 +80,7 @@ public class Player : MonoBehaviour
     public CharacterController Controller => controller;
     public int Score => score;
     public int Lives => lives;
+    public static Player Instance { get; private set; }
 
     private CharacterController controller;
     private Vector3 currentVelocity;
@@ -94,19 +95,33 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning($"Second Player detected on {name}. Destroying duplicate to preserve singleton.");
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
         controller = GetComponent<CharacterController>();
         lives = Mathf.Max(0, startingLives);
         score = 0;
 
-        if (cameraTransform == null && Camera.main != null)
-        {
-            cameraTransform = Camera.main.transform;
-        }
+        EnsureCameraReference();
 
         var gameManager = GameManager.Instance;
         if (gameManager != null)
         {
             gameManager.RegisterPlayer(this);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
         }
     }
 
@@ -124,6 +139,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        EnsureCameraReference();
+
         if (cameraTransform != null)
         {
             Vector3 euler = cameraTransform.eulerAngles;
@@ -134,10 +151,15 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        EnsureCameraReference();
+
         HandleInput(out Vector3 desiredDirection, out bool wantsToJump);
         HandleMovement(desiredDirection, wantsToJump);
-        if(manageCamera)
+
+        if (manageCamera)
+        {
             HandleCamera();
+        }
     }
 
     private void HandleInput(out Vector3 desiredDirection, out bool wantsToJump)
@@ -241,7 +263,7 @@ public class Player : MonoBehaviour
 
     private void HandleCamera()
     {
-        if (cameraTransform == null)
+        if (!EnsureCameraReference())
             return;
 
         yaw += Input.GetAxis("Mouse X") * mouseSensitivityX;
@@ -279,8 +301,23 @@ public class Player : MonoBehaviour
         controller.enabled = true;
     }
 
+    private bool EnsureCameraReference()
+    {
+        if (cameraTransform != null)
+            return true;
+
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null)
+            return false;
+
+        cameraTransform = mainCamera.transform;
+        return cameraTransform != null;
+    }
+
     private void OnDrawGizmosSelected()
     {
+        EnsureCameraReference();
+
         if (cameraTransform != null)
         {
             Gizmos.color = Color.cyan;
