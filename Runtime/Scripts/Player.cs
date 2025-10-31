@@ -51,6 +51,9 @@ public class Player : MonoBehaviour
     [SerializeField] private int lives;
 
     [Header("Camera")]
+    [Tooltip("Active ou desactive la gestion de la camera.")]
+    public bool manageCamera = true;
+
     [Tooltip("Reference a la camera qui tourne autour du joueur.")]
     public Transform cameraTransform;
 
@@ -133,7 +136,8 @@ public class Player : MonoBehaviour
     {
         HandleInput(out Vector3 desiredDirection, out bool wantsToJump);
         HandleMovement(desiredDirection, wantsToJump);
-        HandleCamera();
+        if(manageCamera)
+            HandleCamera();
     }
 
     private void HandleInput(out Vector3 desiredDirection, out bool wantsToJump)

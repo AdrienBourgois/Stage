@@ -2,89 +2,104 @@
 
 ## Vue d'ensemble
 
-Ce package Unity est conçu pour un bootcamp de formation destiné à des adolescents qui souhaitent apprendre à créer des jeux sur Unity. Les participants ne savent pas coder, donc l'objectif est de leur fournir tous les outils nécessaires pour créer un petit jeu de plateforme 3D en se concentrant principalement sur le Level Design.
+Ce package Unity est concu pour un bootcamp de formation destine a des adolescents qui souhaitent apprendre a creer des jeux sur Unity. Les participants ne savent pas coder, donc l'objectif est de leur fournir tous les outils necessaires pour assembler un petit jeu de plateforme 3D en se concentrant principalement sur le level design.
 
 ## Objectifs du Package
 
-- Fournir un système de contrôle de personnage prêt à l'emploi pour un jeu de plateforme 3D
-- Offrir une caméra qui tourne autour du joueur avec contrôle à la souris
-- Implémenter un système de checkpoints pour la progression
-- Créer un système de pièges et de déclencheurs pour les zones de mort
-- Fournir des scripts simples pour les animations de pièges (mouvement oscillant)
-- Ajouter des outils d'édition pour aider les étudiants à configurer leur scène
-- Inclure des tutoriels en français pour guider les participants
+- Fournir un systeme de controle de personnage pret a l'emploi pour un jeu de plateforme 3D
+- Offrir une camera qui tourne autour du joueur avec controle a la souris
+- Implementer un systeme de checkpoints pour la progression
+- Creer un systeme de pieges et de declencheurs pour les zones de mort
+- Proposer des scripts simples pour les animations de pieges (mouvement oscillant et rotation)
+- Ajouter des outils d'edition pour aider les etudiants a configurer leur scene
+- Introduire un systeme simple de score et de vies pour suivre la progression des joueurs
+- Inclure des tutoriels en francais pour guider les participants
 
 ## Architecture du Package
 
 ### Runtime/Scripts/
 Contient tous les scripts de jeu principaux :
 
-- **Player.cs** : Contrôleur de personnage avec mouvement, saut, gravité et caméra intégrée
-- **GameManager.cs** : Singleton qui gère le joueur, les checkpoints et le respawn
-- **Checkpoint.cs** : Points de sauvegarde que le joueur peut atteindre
-- **Trap.cs** : Pièges qui déclenchent le respawn du joueur
-- **LevelPortal.cs** : Portails pour charger une nouvelle scène
-- **OscillatingMover.cs** : Fait bouger un objet d'avant en arrière sur un axe (pour pièges mobiles)
+- **Player.cs** : Controleur de personnage avec mouvement, saut, gravite, camera integree, deceleration au relachement des entrees, gestion du score et des vies.
+- **GameManager.cs** : Singleton qui gere le joueur, les checkpoints, la teleportation lors du respawn et la perte de vies.
+- **Checkpoint.cs** : Points de sauvegarde que le joueur peut atteindre pour definir un nouveau point de respawn.
+- **Trap.cs** : Pieges qui declenchent le respawn du joueur (avec delai optionnel) tout en affichant le volume d'effet via des gizmos.
+- **LevelPortal.cs** : Portails pour charger une nouvelle scene.
+- **OscillatingMover.cs** : Fait bouger un objet d'avant en arriere sur un axe (pour pieges mobiles) avec visualisation complete de la trajectoire.
+- **EventMover.cs** : Deplace un objet d'un point a un autre lorsque la methode `BeginMove` est appelee via un UnityEvent.
+- **Collectible.cs** : Collectible qui accorde un nombre de points configurable et expose un UnityEvent declenche au ramassage.
+- **Rotator.cs** : Utilitaire simple pour faire tourner un objet autour d'un axe choisi, ideal pour les collectibles type pieces.
 
 ### Editor/
-Contient les outils d'édition Unity :
+Contient les outils d'edition Unity :
 
-- **StageValidationWindow.cs** : Fenêtre d'éditeur avec checklist de validation pour aider les étudiants à vérifier leur configuration (accessible via Stage GTech > Validation)
-- **PlayerEditor.cs** : Éditeur personnalisé pour le Player avec boutons pour appliquer des presets
+- **StageValidationWindow.cs** : Fenetre d'editeur avec checklist de validation pour aider les etudiants a verifier leur configuration (accessible via Stage GTech > Validation).
+- **PlayerEditor.cs** : Editeur personnalise pour le Player avec boutons pour appliquer des presets.
 
 ### Runtime/Presets/
-Configurations prédéfinies pour le joueur :
+Configurations predefinies pour le joueur :
 
-- **PlayerPresetData.cs** : Structure de données pour stocker les paramètres
-- **PlayerPresetDefault.cs** : Configuration équilibrée par défaut
-- **PlayerPresetMoon.cs** : Gravité lunaire (sauts hauts, chute lente)
-- **PlayerPresetMario.cs** : Mouvement rapide et précis type Mario
+- **PlayerPresetData.cs** : Structure de donnees pour stocker les parametres.
+- **PlayerPresetDefault.cs** : Configuration equilibree par defaut.
+- **PlayerPresetMoon.cs** : Gravite lunaire (sauts hauts, chute lente).
+- **PlayerPresetMario.cs** : Mouvement rapide et precis type Mario.
+
+## Systemes de Score, Vies et Collectibles
+
+- Le joueur dispose d'un nombre de vies definies via `startingLives`. Chaque mort decremente ce compteur avant de teleporter le joueur au dernier checkpoint actif.
+- Le score commence a zero et est augmente via `Player.AddScore(int)` ; les collectibles s'en servent pour attribuer un nombre de points variable.
+- Les collectibles possedent un UnityEvent `onCollected` pour chainer des effets supplementaires (son, VFX, activation de plateformes, etc.) puis se detruisent automatiquement.
+- Combinez `Collectible` et `Rotator` pour creer des pieces animees et evidentes visuellement pour les etudiants.
+
+## EventMover et Animation d'Objets
+
+- `EventMover` permet de definir un mouvement aller simple entre deux points sans coder : il suffit de relier la methode `BeginMove` a un UnityEvent (bouton, trigger, timeline, etc.).
+- `OscillatingMover` reste disponible pour les mouvements repetitifs et maintenant affiche ses points de depart et d'arrivee dans la scene afin de faciliter le placement.
+- Les gizmos des scripts `Trap`, `OscillatingMover`, `Collectible`, `Rotator` et `EventMover` fournissent des reperes visuels coherents pour aider les etudiants a comprendre l'espace d'interaction de chaque element.
 
 ## Principes de Conception
 
-### Simplicité d'utilisation
-- Tous les scripts ont des tooltips en français (sans accents ni caractères spéciaux)
-- Le code reste en anglais pour la compatibilité
-- Les Gizmos de debug sont toujours affichés quand un objet est sélectionné
-- Pas de couleurs de debug configurables - couleurs constantes pour simplifier
+### Simplicite d'utilisation
+- Tous les scripts ont des tooltips en francais (sans accents ni caracteres speciaux).
+- Le code reste en anglais pour la compatibilite.
+- Les gizmos de debug sont toujours affiches quand un objet est selectionne.
+- Pas de couleurs de debug configurables : couleurs constantes pour simplifier.
 
-### Debug et Visualisation
-- Tous les scripts affichent des Gizmos pour visualiser leur portée et leur fonctionnement
-- Les Gizmos s'affichent automatiquement quand l'objet est sélectionné (pas de checkbox)
-- Couleurs fixes pour les Gizmos (pas de personnalisation)
+### Debug et visualisation
+- Tous les scripts affichent des gizmos pour visualiser leur portee et leur fonctionnement (checkpoints, pieges, collectibles, trajectoires).
+- Les gizmos s'affichent automatiquement quand l'objet est selectionne (pas de checkbox).
+- Couleurs fixes pour les gizmos (pas de personnalisation).
 
-### Système de Respawn
-- Respawn instantané (pas de coroutine)
-- Le système désactive/réactive simplement le CharacterController pour téléporter le joueur
+### Systeme de respawn
+- Respawn instantane (pas de coroutine).
+- Le systeme desactive/reactive simplement le `CharacterController` pour teleporter le joueur.
+- La mort du joueur retire une vie avant le respawn ; adaptez la logique si vous souhaitez finir la partie quand le compteur atteint zero.
 
-## Dépendances
+## Utilisation pour les Etudiants
 
-- Unity Tutorial Framework (com.unity.learn.iet-framework v5.0.2) : Pour créer des tutoriels interactifs guidés
-- Unity Tutorial Authoring Tools (com.unity.learn.iet-framework.authoring v1.5.2) : Outils d'édition pour les tutoriels
+1. **Configuration initiale** :
+   - Ajouter un `GameManager` a la scene.
+   - Ajouter un `Player` avec le tag `Player`.
+   - Configurer au moins un `Checkpoint` de depart.
+   - Verifier la configuration avec Stage GTech > Validation.
 
-## Utilisation pour les Étudiants
-
-1. **Configuration Initiale** :
-   - Ajouter un GameManager à la scène
-   - Ajouter un Player avec le tag "Player"
-   - Configurer au moins un Checkpoint de départ
-   - Vérifier la configuration avec Stage GTech > Validation
-
-2. **Level Design** :
-   - Créer le terrain et les plateformes
-   - Placer des Checkpoints
-   - Ajouter des Traps et RespawnTriggers
-   - Configurer des LevelPortals pour la progression
+2. **Level design** :
+   - Creer le terrain et les plateformes.
+   - Placer des `Checkpoint`.
+   - Ajouter des `Trap` et `RespawnTrigger`.
+   - Configurer des `LevelPortal` pour la progression.
+   - Positionner des `Collectible` et animer leur presentation avec `Rotator` ou `OscillatingMover`.
 
 3. **Personnalisation** :
-   - Utiliser les presets pour modifier le comportement du joueur
-   - Ajuster les paramètres visuels
-   - Ajouter des effets sonores et visuels aux déclencheurs
+   - Utiliser les presets pour modifier le comportement du joueur.
+   - Ajuster les parametres visuels.
+   - Ajouter des effets sonores et visuels aux declencheurs.
+   - Lier `EventMover.BeginMove` a des UnityEvents pour mettre en scene des plateformes ou obstacles temporises.
 
 ## Notes Techniques
 
-### Évolutions Possibles
-- Ajouter plus de presets (vitesse élevée, plateforme précise, etc.)
-- Ajouter des effets visuels par défaut pour les checkpoints et portails
-- Système de collectibles
-- Power-ups temporaires
+### Evolutions possibles
+- Ajouter une interface utilisateur par defaut pour afficher le score et les vies.
+- Ajouter plus de presets (vitesse elevee, plateforme precise, etc.).
+- Ajouter des effets visuels par defaut pour les checkpoints et portails.
+- Prevoir un systeme de collectibles specifiques (clefs, fragments) ou de power-ups temporaires.
