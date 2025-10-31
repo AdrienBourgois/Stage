@@ -82,20 +82,6 @@ public class StageValidationWindow : EditorWindow
         Checkpoint[] checkpoints = FindObjectsByType<Checkpoint>(FindObjectsSortMode.None);
         DrawValidationItem($"Au moins un Checkpoint existe ({checkpoints.Length} trouve(s))", checkpoints.Length > 0);
         
-        if (checkpoints.Length > 0)
-        {
-            bool hasStartingCheckpoint = false;
-            foreach (var cp in checkpoints)
-            {
-                if (cp.isStartingCheckpoint)
-                {
-                    hasStartingCheckpoint = true;
-                    break;
-                }
-            }
-            DrawValidationItem("Au moins un Checkpoint est marque comme point de depart", hasStartingCheckpoint);
-        }
-        
         // Check Portals
         LevelPortal[] portals = FindObjectsByType<LevelPortal>(FindObjectsSortMode.None);
         if (portals.Length > 0)
