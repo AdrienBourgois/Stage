@@ -1,8 +1,7 @@
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Rigidbody))]
-public class Player : MonoBehaviour
+public class Player : PlayerBase
 {
     [Header("Movement")]
     [Tooltip("Vitesse maximale au sol.")]
@@ -40,16 +39,6 @@ public class Player : MonoBehaviour
     [Tooltip("Vitesse de chute maximale.")]
     [Range(5f, 60f)] public float terminalVelocity = 50f;
 
-    [Header("Stats")]
-    [Tooltip("Nombre de vies disponibles pour le joueur au demarrage.")]
-    [Range(0, 9)] public int startingLives = 3;
-
-    [Tooltip("Score actuel du joueur (lecture seule).")]
-    [SerializeField] private int score;
-
-    [Tooltip("Vies actuellement restantes (lecture seule).")]
-    [SerializeField] private int lives;
-
     [Header("Camera")]
     [Tooltip("Active ou desactive la gestion de la camera.")]
     public bool manageCamera = true;
@@ -77,12 +66,8 @@ public class Player : MonoBehaviour
 
     public const float cameraSmoothTime = 40f;
 
-    public CharacterController Controller => controller;
-    public int Score => score;
-    public int Lives => lives;
     public static Player Instance { get; private set; }
 
-    private CharacterController controller;
     private Vector3 currentVelocity;
     private float verticalVelocity;
     private float yaw;
@@ -92,8 +77,9 @@ public class Player : MonoBehaviour
     private Vector3 cameraVelocity;
 
     private bool IsGrounded => controller.isGrounded;
+    public override bool SupportsJumping => true;
 
-    private void Awake()
+    protected override void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -104,17 +90,9 @@ public class Player : MonoBehaviour
 
         Instance = this;
 
-        controller = GetComponent<CharacterController>();
-        lives = Mathf.Max(0, startingLives);
-        score = 0;
-
         EnsureCameraReference();
 
-        var gameManager = GameManager.Instance;
-        if (gameManager != null)
-        {
-            gameManager.RegisterPlayer(this);
-        }
+        base.Awake();
     }
 
     private void OnDestroy()
@@ -276,29 +254,10 @@ public class Player : MonoBehaviour
         cameraTransform.position = Vector3.SmoothDamp(cameraTransform.position, targetPosition, ref cameraVelocity, 1f / cameraSmoothTime);
     }
 
-    public void AddScore(int amount)
+    protected override void ResetState()
     {
-        if (amount <= 0)
-            return;
-
-        score += amount;
-    }
-
-    public void HandleDeath()
-    {
-        if (lives <= 0)
-            return;
-
-        lives--;
-    }
-
-    public void RespawnAt(Vector3 position)
-    {
-        controller.enabled = false;
-        transform.position = position;
         currentVelocity = Vector3.zero;
         verticalVelocity = 0f;
-        controller.enabled = true;
     }
 
     private bool EnsureCameraReference()

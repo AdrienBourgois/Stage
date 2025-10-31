@@ -26,11 +26,11 @@ public class Collectible : MonoBehaviour
         if (consumed || !other.CompareTag("Player"))
             return;
 
-        Player player = other.GetComponent<Player>();
+        PlayerBase player = other.GetComponent<PlayerBase>();
 
         if (player == null)
         {
-            player = other.GetComponentInParent<Player>();
+            player = other.GetComponentInParent<PlayerBase>();
         }
 
         if (player == null)

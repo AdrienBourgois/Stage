@@ -42,11 +42,11 @@ public class StageValidationWindow : EditorWindow
         }
         
         // Check Player
-        Player[] players = FindObjectsByType<Player>(FindObjectsSortMode.None);
-        Player player = players.Length > 0 ? players[0] : null;
-        DrawValidationItem("Player existe dans la scene", player != null);
-        DrawValidationItem("Un seul Player est present", players.Length == 1);
-        
+        PlayerBase[] players = FindObjectsByType<PlayerBase>(FindObjectsSortMode.None);
+        PlayerBase player = players.Length > 0 ? players[0] : null;
+        DrawValidationItem("Player (3D ou TopDown) existe dans la scene", player != null);
+        DrawValidationItem("Un seul joueur (PlayerBase) est present", players.Length == 1);
+
         if (player != null)
         {
             // Check player tag
@@ -63,6 +63,12 @@ public class StageValidationWindow : EditorWindow
             else if (controller != null)
             {
                 DrawValidationItem("Player: CharacterController est active", false);
+            }
+
+            if (player is TopDownPlayer)
+            {
+                Camera childCamera = player.GetComponentInChildren<Camera>();
+                DrawValidationItem("TopDownPlayer: Une camera enfant est detectee", childCamera != null);
             }
         }
         

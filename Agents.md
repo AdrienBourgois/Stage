@@ -20,7 +20,9 @@ Ce package Unity est concu pour un bootcamp de formation destine a des adolescen
 ### Runtime/Scripts/
 Contient tous les scripts de jeu principaux :
 
-- **Player.cs** : Controleur de personnage avec mouvement, saut, gravite, camera integree, deceleration au relachement des entrees, gestion du score et des vies. Singleton accessible via `Player.Instance` qui gere automatiquement la camera en recuperant l'objet tagge `MainCamera`.
+- **PlayerBase.cs** : Classe parente commune aux joueurs. Gere les vies, le score et l'enregistrement automatique dans le `GameManager`.
+- **Player.cs** : Controleur de plateforme 3D avec mouvement, saut, gravite, camera orbitale integree, deceleration au relachement des entrees, gestion du score et des vies. Singleton accessible via `Player.Instance` qui gere automatiquement la camera en recuperant l'objet tagge `MainCamera`.
+- **TopDownPlayer.cs** : Variante top-down pour vue du dessus utilisant une camera enfant, mouvement axe XZ sans rotation, saut classique et absence de controle souris.
 - **GameManager.cs** : Singleton (`GameManager.Instance`) qui gere le joueur, les checkpoints, la teleportation lors du respawn et la perte de vies sans assignation manuelle.
 - **Checkpoint.cs** : Points de sauvegarde que le joueur peut atteindre pour definir un nouveau point de respawn.
 - **Trap.cs** : Pieges qui declenchent le respawn du joueur (avec delai optionnel) tout en affichant le volume d'effet via des gizmos.
@@ -46,7 +48,7 @@ Configurations predefinies pour le joueur :
 
 ## Systemes de Score, Vies et Collectibles
 
-- Le joueur dispose d'un nombre de vies definies via `startingLives`. Chaque mort decremente ce compteur avant de teleporter le joueur au dernier checkpoint actif.
+- Les joueurs derives de `PlayerBase` disposent d'un nombre de vies defini via `startingLives`. Chaque mort decremente ce compteur avant de teleporter le joueur au dernier checkpoint actif.
 - Le score commence a zero et est augmente via `Player.AddScore(int)` ; les collectibles s'en servent pour attribuer un nombre de points variable.
 - Les collectibles possedent un UnityEvent `onCollected` pour chainer des effets supplementaires (son, VFX, activation de plateformes, etc.) puis se detruisent automatiquement.
 - Combinez `Collectible` et `Rotator` pour creer des pieces animees et evidentes visuellement pour les etudiants.
@@ -81,7 +83,7 @@ Configurations predefinies pour le joueur :
 
 1. **Configuration initiale** :
    - Ajouter un `GameManager` a la scene.
-   - Ajouter un `Player` avec le tag `Player`.
+   - Ajouter un `Player` (vue 3D) ou `TopDownPlayer` (vue du dessus) avec le tag `Player`.
    - Configurer au moins un `Checkpoint` de depart.
    - Verifier la configuration avec Stage GTech > Validation.
 

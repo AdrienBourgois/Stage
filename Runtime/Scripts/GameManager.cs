@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool persistAcrossScenes;
 
     private Transform currentCheckpoint;
+    private PlayerBase registeredPlayer;
 
     public Transform CurrentCheckpoint => currentCheckpoint != null ? currentCheckpoint : defaultSpawnPoint;
 
@@ -52,11 +53,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Player existingPlayer = Player.Instance;
+        PlayerBase existingPlayer = Player.Instance;
 
         if (existingPlayer == null)
         {
-            existingPlayer = FindFirstObjectByType<Player>();
+            existingPlayer = FindFirstObjectByType<PlayerBase>();
         }
 
         if (existingPlayer != null)
@@ -72,10 +73,12 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Registers the player to the game manager so we can respawn it later.
     /// </summary>
-    public void RegisterPlayer(Player newPlayer)
+    public void RegisterPlayer(PlayerBase newPlayer)
     {
         if (newPlayer == null)
             return;
+
+        registeredPlayer = newPlayer;
 
         if (currentCheckpoint == null)
         {
@@ -96,11 +99,12 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnDeath()
     {
-        Player activePlayer = Player.Instance;
+        PlayerBase activePlayer = registeredPlayer != null ? registeredPlayer : Player.Instance;
 
         if (activePlayer == null)
         {
-            activePlayer = FindFirstObjectByType<Player>();
+            activePlayer = FindFirstObjectByType<PlayerBase>();
+            registeredPlayer = activePlayer;
         }
 
         if (activePlayer == null)
